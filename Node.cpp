@@ -1,12 +1,16 @@
-#include "Node.hpp"
+#include "Node.h"
 
 Node::Node(){
-    value = 0;
+    nota = 0;
     next = nullptr;
 }
 
-void Node::setValue(int value){
-    this -> value = value;
+void Node::setNota(int nota){
+    this -> nota = nota;
+}
+
+void Node::setCurso(std::string curso){
+    this -> curso = curso;
 }
 
 void Node::setNext(Node *next){
@@ -14,13 +18,16 @@ void Node::setNext(Node *next){
 }
 
 Node::~Node(){
-    delete &value;
-    next = nullptr;
     delete next;
+    next = nullptr;
 }
 
-int Node::getValue(){
-    return value;
+int Node::getNota(){
+    return nota;
+}
+
+std::string Node::getCurso(){
+    return curso;
 }
 
 Node *Node::getNext(){
