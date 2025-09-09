@@ -31,7 +31,7 @@ void Alumno::setFecha(std::string fechaIngreso){
     this -> fechaIngreso = fechaIngreso;
 }
 
-void Alumno::add(int nota, std::string curso){
+void Alumno::add(double nota, std::string curso){
     Node *nuevo = new Node();
     
     if (notas_start == nullptr) {
@@ -62,26 +62,50 @@ void Alumno::remove(std::string curso){
     Node *cursor = notas_start;
     Node *anterior = nullptr;
     Node *siguiente = nullptr;
-    while (cursor -> getNext() != nullptr){
+    while (cursor != nullptr){
         
         if(cursor -> getCurso() == curso){
             siguiente = cursor -> getNext();
             cursor -> ~Node();
+            cursor = siguiente;
             if (anterior != nullptr){
                 anterior -> setNext(siguiente);
             } else {
                 notas_start = siguiente;
+                siguiente = nullptr;
+                cursor = notas_start;
             }
         }
         
         anterior = cursor;
-        cursor = cursor -> getNext();
+        if(cursor != nullptr){
+            cursor = cursor -> getNext();
+        }
     }
     return;
 }
 
 void Alumno::setNext(Alumno *next){
     this -> next = next;
+}
+
+void Alumno::print(){
+    if(this != nullptr){
+        std::cout<<"__DATOS DEL ALUMNO__ "<< std::endl;
+        std::cout<<"ID: ";
+        std::cout<<this -> getId() << std::endl;
+        std::cout<<"Nombre: ";
+        std::cout<<this -> getNombre() << std::endl;
+        std::cout<<"Apellido: ";
+        std::cout<<this -> getApellido() << std::endl;
+        std::cout<<"Carrera: ";
+        std::cout<<this -> getCarrera() << std::endl;
+        std::cout<<"Fecha de ingreso: ";
+        std::cout<<this -> getFecha() << std::endl;
+        std::cout<<" " << std::endl;
+    } else {
+        std::cout<<"__ALUMNO INEXISTENTE__"<< std::endl;
+    }
 }
 
 int Alumno::getId(){

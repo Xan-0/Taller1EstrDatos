@@ -19,10 +19,11 @@ class Alumno {
     	void setApellido(std::string apellido);
     	void setCarrera(std::string carrera);
     	void setFecha(std::string fechaIngreso);
+    	void setNext(Alumno *next);
     	
-    	void add(int nota, std::string curso);
+    	void add(double nota, std::string curso);
     	void remove(std::string curso);
-        void setNext(Alumno *next);
+        void print();
 	
         int getId();
     	std::string getNombre();

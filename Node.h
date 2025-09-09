@@ -3,16 +3,17 @@
 
 class Node {
     private:
-        int nota;
+        double nota;
         std::string curso;
         Node *next;
     public:
         Node();
-        void setNota(int nota);
-        void setCurso(std::string curso);
+        void setNota(double nota);
+        void setCurso(std::string id_curso);
         void setNext(Node *next);
-        int getNota();
+        double getNota();
         std::string getCurso();
         Node *getNext();
         ~Node();
 };
+
