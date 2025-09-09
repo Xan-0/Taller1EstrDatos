@@ -9,11 +9,12 @@ class Node {
     public:
         Node();
         void setNota(double nota);
-        void setCurso(std::string id_curso);
+        void setCurso(std::string curso);
         void setNext(Node *next);
         double getNota();
         std::string getCurso();
         Node *getNext();
         ~Node();
 };
+
 
