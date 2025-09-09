@@ -8,6 +8,7 @@ class Curso {
     	int capacidad;
     	std::string carrera;
     	std::string profesor;
+    	int cant_alumnos;
     	Alumno *alumnos_start;
     	Curso *next;
     public:
@@ -22,8 +23,12 @@ class Curso {
         void setNext(Curso *next);
 	
     	void add(Alumno *alumno);
-    	void remove(int index);
+    	void remove(int id);
     	Alumno *get(int id);
+    	void print();
+    	void print_alumno(std::string nombre_alumno);
+    	void print_alumnos();
+    	double promedio(int id_alumno);
         bool isEmpty();
 	
         int getId();
