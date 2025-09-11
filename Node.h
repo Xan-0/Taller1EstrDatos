@@ -1,20 +1,20 @@
-#include <iostream>
 #pragma once
 
 class Node {
     private:
         double nota;
-        std::string curso;
+        int id_alumno;
+        int id_curso;
         Node *next;
     public:
-        Node();
+        Node(double nota, int id_alumno, int id_curso);
         void setNota(double nota);
-        void setCurso(std::string curso);
+        void setAlumno(int id_alumno);
+        void setCurso(int id_curso);
         void setNext(Node *next);
         double getNota();
-        std::string getCurso();
+        int getCurso();
+        int getAlumno();
         Node *getNext();
         ~Node();
 };
-
-
