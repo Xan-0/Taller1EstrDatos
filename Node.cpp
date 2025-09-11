@@ -1,35 +1,44 @@
 #include "Node.h"
 
-Node::Node(){
-    nota = 0;
+Node::Node(double nota, int id_alumno, int id_curso) {
+    this -> nota = nota;
+    this -> id_alumno = id_alumno;
+    this -> id_curso = id_curso;
     next = nullptr;
 }
 
-void Node::setNota(int nota){
+void Node::setNota(double nota){
     this -> nota = nota;
 }
 
-void Node::setCurso(std::string curso){
-    this -> curso = curso;
+void Node::setAlumno(int id_alumno){
+    this -> id_alumno = id_alumno;
+}
+
+void Node::setCurso(int id_curso){
+    this -> id_curso = id_curso;
 }
 
 void Node::setNext(Node *next){
     this -> next = next;
 }
 
-Node::~Node(){
-    delete next;
-    next = nullptr;
-}
-
-int Node::getNota(){
+double Node::getNota(){
     return nota;
 }
 
-std::string Node::getCurso(){
-    return curso;
+int Node::getAlumno(){
+    return id_alumno;
+}
+
+int Node::getCurso(){
+    return id_curso;
 }
 
 Node *Node::getNext(){
     return next;
+}
+
+Node::~Node(){
+    next = nullptr;
 }
