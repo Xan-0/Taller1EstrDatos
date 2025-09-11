@@ -1,182 +1,17 @@
-#include "Curso.h"
+#include "Universidad.h"
 #include <limits>
 #include <cctype>
 
-struct Universidad {
-    Curso *cursos_start;
-    
-    void add_curso(Curso *curso){
-        Curso *cursor = cursos_start;
-        while (cursor -> getNext() != nullptr){
-            cursor = cursor -> getNext();
-        }
-        cursor -> setNext(curso);
-        curso -> setNext(nullptr);
-        return;
-    }
-    
-    Curso *get_curso(int id){
-        if (id == -1){
-            return cursos_start;
-        }
-        Curso *cursor = cursos_start;
-        while (cursor -> getNext() != nullptr){
-            if(cursor -> getId() == id){
-                break;
-            }
-            cursor = cursor -> getNext();
-        }
-        if(cursor -> getId() == id){
-            return cursor;
-        }
-        return nullptr;
-    }
-    
-    void eliminar_alumno(int id){
-        Curso *cursor = cursos_start;
-        Alumno *al = cursos_start -> get(id);
-        if(al != nullptr){
-            while (cursor -> getNext() != nullptr){
-                cursor -> remove(id);
-                cursor = cursor -> getNext();
-            }
-            cursor -> remove(id);
-            al -> ~Alumno();
-            std::cout<<"Alumno Eliminado."<< std::endl;
-        }
-        return;
-    }
-    
-    void print_curso(std::string nombre){
-        Curso *cursor = cursos_start;
-        bool printed = false;
-        while (cursor -> getNext() != nullptr){
-            if(cursor -> getNombre() == nombre){
-                cursor -> print();
-                printed = true;
-            }
-            cursor = cursor -> getNext();
-        }
-        if(cursor -> getNombre() == nombre){
-            cursor -> print();
-            printed = true;
-        }
-        if(!printed){
-            std::cout<<"__CURSO/S INEXISTENTE/S__"<< std::endl;
-        }
-        return;
-    }
-    
-    void remove(int id){
-        if (id == -1){
-            std::cout << "No se puede eliminar a el Curso 0." << std::endl;
-            return;
-        }
-        if(cursos_start -> getNext() == nullptr){
-            std::cout << "No hay cursos para eliminar." << std::endl;
-            return;
-        }
-        
-        Curso *cursor = cursos_start -> getNext();
-        while (cursor -> getNext() != nullptr){
-            if(cursor -> getId() == id){
-                cursor -> ~Curso();
-                std::cout<<"Curso Eliminado."<< std::endl;
-                return;
-            }
-            cursor = cursor -> getNext();
-        }
-        
-        return;
-    }
-    
-    void alumnos_en(std::string carrera){
-        Curso *cursor = cursos_start;
-        bool printed = false;
-        while (cursor -> getNext() != nullptr){
-            if(cursor -> getCarrera() == carrera){
-                cursor -> print_alumnos();
-                printed = true;
-            }
-            cursor = cursor -> getNext();
-        }
-        if(cursor -> getCarrera() == carrera){
-            cursor -> print_alumnos();
-            printed = true;
-        }
-        if(!printed){
-            std::cout<<"No hay cursos de la designada carrera."<< std::endl;
-        }
-        return;
-    }
-    
-    void cursos_alumno(int id){
-        if (cursos_start -> getNext() == nullptr){
-            std::cout<<"No hay cursos disponibles."<< std::endl;
-            return;
-        }
-        if (cursos_start -> getAlumnos() == nullptr){
-            std::cout<<"No hay alumnos."<< std::endl;
-            return;
-        }
-        
-        Curso *cursor = cursos_start -> getNext();
-        bool printed = false;
-        while (cursor -> getNext() != nullptr){
-            if(cursor -> get(id) != nullptr){
-                cursor -> print();
-                printed = true;
-            }
-            cursor = cursor -> getNext();
-        }
-        if(cursor -> get(id) != nullptr){
-            cursor -> print();
-            printed = true;
-        }
-        if(!printed){
-            std::cout<<"Alumno no está inscrito en ningún curso."<< std::endl;
-        }
-        return;
-    }
-    
-    double promedio_general(int id){
-        double i = 1.0;
-        double acumulador = 0.0;
-        double temp = 0.0;
-        
-        Curso *cursor = cursos_start -> getNext();
-        while (cursor -> getNext() != nullptr){
-            
-            if (cursor -> get(id) != nullptr){
-                temp = cursor -> promedio(id);
-                if (temp != -1.0) {
-                    acumulador = acumulador + temp;
-                    i++;
-                }
-            }
-            
-            cursor = cursor -> getNext();
-        }
-        
-        if (cursor -> get(id) != nullptr){
-            temp = cursor -> promedio(id);
-                if (temp != -1.0) {
-                    acumulador = acumulador + temp;
-                }
-        }
-        return acumulador / i;
-    }
-    
-};
+//Johan Piñones - Paralelo C2
 
-Universidad* ucn = new Universidad;
+Universidad* ucn = new Universidad("UCN");
 
-bool esValido(const std::string & texto) {
+bool esValido(const string & texto) {
     if (texto.empty()) {
         return false;
     }
     for (char c: texto) {
-        if (!isalnum(static_cast<unsigned char>(c))) {
+        if (!isalnum(static_cast<unsigned char>(c))) { //Si no es alfanumérico retorna false.
             return false;
         }
     }
@@ -186,16 +21,16 @@ bool esValido(const std::string & texto) {
 int leer_input_int(int input){
     bool valid = false;
     do {
-        std::cout<<"Input: ";
-        std::cin >> input;
-        if(std::cin.fail()){
-            std::cout << "Input inválido. Debe ser un entero." << std::endl;
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-            std::cin.clear();
+        cout<<"Input: ";
+        cin >> input;
+        if(cin.fail()){
+            cout << "Input inválido. Debe ser un entero." << endl;
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
         } else {
             valid = true;
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-            std::cout << " " << std::endl;
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            cout << " " << endl;
         }
     } while (!valid);
     
@@ -205,32 +40,32 @@ int leer_input_int(int input){
 double leer_input_double(double input){
     
     while (true) {
-        std::cout << "Input (double): ";
-        std::cin >> input;
+        cout << "Input (double): ";
+        cin >> input;
         
-        if (std::cin.fail()) {
-            std::cout << "Input inválido. Debe ser un decimal (double)." << std::endl;
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-            std::cin.clear();
+        if (cin.fail()) {
+            cout << "Input inválido. Debe ser un decimal (double)." << endl;
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            cin.clear();
         } else {
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
             break;
         }
     }
     return input;
 }
 
-std::string leer_input_str(std::string input){
+string leer_input_str(string input){
     bool valid = false;
     do {
-        std::cout<<"Input: ";
-        std::getline(std::cin, input);
+        cout<<"Input: ";
+        getline(cin, input);
         
         if (esValido(input)) {
             valid = true;
-            std::cout << " " << std::endl;
+            cout << " " << endl;
         } else {
-            std::cout << "Error. Texto inválido." << std::endl;
+            cout << "Error. Texto inválido." << endl;
         }
         
     } while (!valid);
@@ -238,82 +73,89 @@ std::string leer_input_str(std::string input){
     return input;
 }
 
-void menu_alumnos(int int_input, std::string str_input){
+void menu_alumnos(int int_input, string str_input) {
     double double_input;
     int id = -1;
-    std::string nombre;
-    std::string apellido;
-    std::string carrera;
-    std::string fecha;
+    string nombre;
+    string apellido;
+    string carrera;
+    string fecha;
     int id_curso;
     double nota;
-    Curso *temp = nullptr;
+    Curso *temp_cur = nullptr;
     Alumno *temp_al = nullptr;
     
     do {
-        std::cout<<"[Menú Alumnos]"<< std::endl;
-        std::cout<<" "<< std::endl;
-        std::cout<<"Opciones:"<< std::endl;
-        std::cout<<"0. Salir."<< std::endl;
-        std::cout<<"1. Crear Alumno."<< std::endl;
-        std::cout<<"2. Buscar Alumno."<< std::endl;
-        std::cout<<"3. Eliminar Alumno."<< std::endl;
-        std::cout<<"4. Inscribir Alumno a un Curso."<< std::endl;
-        std::cout<<"5. Desinscribir a Alumno de un Curso."<< std::endl;
-        std::cout<<"6. Asignar notas a un Alumno en un Curso."<< std::endl;
+        cout<<"[Menú Alumnos]"<< endl;
+        cout<<" "<< endl;
+        cout<<"Opciones:"<< endl;
+        cout<<"0. Salir."<< endl;
+        cout<<"1. Crear Alumno."<< endl;
+        cout<<"2. Buscar Alumno."<< endl;
+        cout<<"3. Eliminar Alumno."<< endl;
+        cout<<"4. Inscribir Alumno a un Curso."<< endl;
+        cout<<"5. Desinscribir a Alumno de un Curso."<< endl;
+        cout<<"6. Asignar notas a un Alumno en un Curso."<< endl;
         
         int_input = leer_input_int(int_input);
         
         switch(int_input){
             case 0:
-                std::cout<<"[Menú Alumnos Finalizado]"<< std::endl;
+                cout<<"[Menú Alumnos Finalizado]"<< endl;
+                cout<<" "<< endl;
                 break;
             case 1:
-                std::cout<<"Debe ingresar todos los datos necesarios: "<< std::endl;
-                std::cout<<"[ID]"<< std::endl;
+                cout<<"Debe ingresar todos los datos necesarios: "<< endl;
+                cout<<"[ID ALUMNO]"<< endl;
                 id = leer_input_int(int_input);
-                std::cout<<"[NOMBRE]"<< std::endl;
+                
+                if(ucn -> getAlumno(id) != nullptr){
+                    cout<<"ID ya existente, los identificadores únicos no pueden repetirse."<< endl;
+                    break;
+                }
+                
+                cout<<"[NOMBRE]"<< endl;
                 nombre = leer_input_str(str_input);
-                std::cout<<"[APELLIDO]"<< std::endl;
+                cout<<"[APELLIDO]"<< endl;
                 apellido = leer_input_str(str_input);
-                std::cout<<"[CARRERA]"<< std::endl;
+                cout<<"[CARRERA]"<< endl;
                 carrera = leer_input_str(str_input);
-                std::cout<<"[FECHA DE INGRESO]"<< std::endl;
+                cout<<"[FECHA DE INGRESO]"<< endl;
                 fecha = leer_input_str(str_input);
                 
-                ucn -> cursos_start -> add(new Alumno(id,nombre,apellido,carrera,fecha));
-                std::cout<<"Alumno Creado."<< std::endl;
+                ucn -> addAlumno(new Alumno(id,nombre,apellido,carrera,fecha));
+                cout<<"Alumno Creado."<< endl;
                 break;
             case 2:
-                if(ucn -> cursos_start -> isEmpty()){
-                    std::cout<<"No hay alumnos."<< std::endl;
+                if(ucn -> alumnos_start == nullptr){
+                    cout<<"No hay alumnos."<< endl;
                     break;
                 }
                 do {
-                std::cout<<"Buscar Almuno por:"<< std::endl;
-                std::cout<<"0. Cancelar."<< std::endl;
-                std::cout<<"1. ID."<< std::endl;
-                std::cout<<"2. Nombre."<< std::endl;
+                cout<<"Buscar Almuno por:"<< endl;
+                cout<<"0. Cancelar."<< endl;
+                cout<<"1. ID."<< endl;
+                cout<<"2. Nombre."<< endl;
                 
                 int_input = leer_input_int(int_input);
                 
                 //...
                 switch(int_input){
                     case 0:
-                        std::cout<<"[Cancelado]"<< std::endl;
+                        cout<<"[Cancelado]"<< endl;
                         break;
                     case 1:
-                        std::cout<<"[ID]"<< std::endl;
+                        cout<<"[ID ALUMNO]"<< endl;
                         id = leer_input_int(int_input);
-                        ucn -> cursos_start -> get(id) -> print();
+                        ucn -> getAlumno(id) -> print();
                         break;
                     case 2:
-                        std::cout<<"[NOMBRE]"<< std::endl;
+                        cout<<"[NOMBRE]"<< endl;
                         nombre = leer_input_str(str_input);
-                        ucn -> cursos_start -> print_alumno(nombre);
+                        ucn -> print_alumno(nombre);
                         break;
                     default:
-                        std::cout<<"Opción no válida, debe ser un numero del 0 al 2."<< std::endl;
+                        cout<<"Opción no válida, debe ser un numero del 0 al 2."<< endl;
                         break;
                 } //...
                 
@@ -321,104 +163,140 @@ void menu_alumnos(int int_input, std::string str_input){
                 int_input = 2;
                 break;
             case 3:
-                if(ucn -> cursos_start -> isEmpty()){
-                    std::cout<<"No hay alumnos."<< std::endl;
+                if(ucn -> alumnos_start == nullptr){
+                    cout<<"No hay alumnos."<< endl;
                     break;
                 }
-                std::cout<<"[ID]"<< std::endl;
+                cout<<"[ID ALUMNO]"<< endl;
                 id = leer_input_int(int_input);
                 
-                ucn -> eliminar_alumno(id);
+                ucn -> removerAlumno(id);
+                cout<<"Alumno eliminado."<< endl;
                 break;
             case 4:
-                if(ucn -> cursos_start -> getNext() == nullptr){
-                    std::cout << "No hay cursos disponibles." << std::endl;
+                if(ucn -> cursos_start == nullptr){
+                    cout << "No hay cursos disponibles." << endl;
                     break;
                 }
-                std::cout<<"[ID]"<< std::endl;
+                if(ucn -> alumnos_start == nullptr) {
+                    cout<<"No hay alumnos."<< endl;
+                    break;
+                }
+                
+                cout<<"[ID ALUMNO]"<< endl;
                 id = leer_input_int(int_input);
-                std::cout<<"[ID CURSO]"<< std::endl;
+                
+                if(ucn -> getAlumno(id) == nullptr){
+                    cout<<"Error, ID del Alumno inexistente."<< endl;
+                    break;
+                }
+                
+                cout<<"[ID CURSO]"<< endl;
                 id_curso = leer_input_int(int_input);
                 
-                if(id_curso == -1){
-                    std::cout << "No se puede inscribir a un alumno en el Curso 0." << std::endl;
+                temp_cur = ucn -> getCurso(id_curso);
+                temp_al = ucn -> getAlumno(id);
+                
+                if(temp_cur != nullptr){
+                    
+                    if(temp_al -> getCarrera() == temp_cur -> getCarrera()){
+                        if(temp_cur -> getCantAlumnos() < temp_cur -> getCapacidad()){
+                            
+                            ucn -> addNota(new Node(0.0, id, id_curso));
+                            cout<<"Alumno Inscrito en " + temp_cur -> getNombre() + "."<< endl;
+                            
+                        } else {
+                            cout << "Curso sin cupos." << endl;
+                        }
+                        
+                    } else {
+                        cout << "Error, Carrera no compatible." << endl;
+                        break;
+                    }
+                    
+                } else {
+                    cout << "Error, ID del Curso inexistente." << endl;
                     break;
                 }
-                
-                temp =  ucn -> get_curso(id_curso);
-                if(temp != nullptr){
-                    temp -> add(ucn -> cursos_start -> get(id));
-                    std::cout<<"Alumno Inscrito en " + temp -> getNombre() + "."<< std::endl;
-                } else {
-                    std::cout << "Error, ID del curso inexistente." << std::endl;
-                }
+                temp_cur = nullptr;
+                temp_al = nullptr;
                 break;
             case 5:
-                if(ucn -> cursos_start -> getNext() == nullptr){
-                    std::cout << "No hay cursos disponibles." << std::endl;
+                if(ucn -> cursos_start == nullptr){
+                    cout << "No hay Cursos disponibles." << endl;
                     break;
                 }
-                std::cout<<"[ID]"<< std::endl;
+                if(ucn -> alumnos_start == nullptr) {
+                    cout<<"No hay Alumnos."<< endl;
+                    break;
+                }
+                
+                cout<<"[ID ALUMNO]"<< endl;
                 id = leer_input_int(int_input);
-                std::cout<<"[ID CURSO]"<< std::endl;
+                
+                if(ucn -> getAlumno(id) == nullptr){
+                    cout<<"Error, ID del Alumno inexistente."<< endl;
+                    break;
+                }
+                
+                cout<<"[ID CURSO]"<< endl;
                 id_curso = leer_input_int(int_input);
                 
-                if(id_curso == -1){
-                    std::cout << "No se puede desinscribir a un alumno en el Curso 0." << std::endl;
+                temp_cur = ucn -> getCurso(id_curso);
+                
+                if(temp_cur != nullptr){
+                    ucn -> removerNotas(id, id_curso);
+                    cout<<"Alumno Desinscrito de " + temp_cur -> getNombre() + "."<< endl;
+                } else {
+                    cout << "Error, ID del Curso inexistente." << endl;
                     break;
                 }
-                
-                temp = ucn -> get_curso(id_curso);
-                
-                if(temp != nullptr){
-                    temp -> remove(id);
-                    std::cout<<"Alumno Desinscrito de " + temp -> getNombre() + "."<< std::endl;
-                } else {
-                    std::cout << "Error, ID del curso inexistente." << std::endl;
-                }
+                temp_cur = nullptr;
                 break;
             case 6:
-                /*if(ucn -> cursos_start -> getNext() == nullptr){
-                    std::cout << "No hay cursos disponibles." << std::endl;
+                if(ucn -> cursos_start == nullptr){
+                    cout << "No hay cursos disponibles." << endl;
                     break;
                 }
-                if(ucn -> cursos_start -> isEmpty()){
-                    std::cout<<"No hay alumnos."<< std::endl;
+                if(ucn -> alumnos_start == nullptr) {
+                    cout<<"No hay alumnos."<< endl;
                     break;
-                }*/
-                std::cout<<"[ID]"<< std::endl;
+                }
+                
+                cout<<"[ID ALUMNO]"<< endl;
                 id = leer_input_int(int_input);
-                std::cout<<"[ID CURSO]"<< std::endl;
+                cout<<"[ID CURSO]"<< endl;
                 id_curso = leer_input_int(int_input);
-                std::cout<<"[NOTA]"<< std::endl;
+                cout<<"[NOTA]"<< endl;
                 nota = leer_input_double(double_input);
                 
-                std::cout<<nota<< std::endl;
+                cout<<nota<< endl;
                 if (nota < 1.0 || nota > 7.0){
-                    std::cout << "Error, la nota debe estar en la escala Chilena (1,0 a 7,0)." << std::endl;
+                    cout << "Error, la nota debe estar en la escala Chilena (1,0 a 7,0)." << endl;
                     break;
                 }
                 
-                temp = ucn -> get_curso(id_curso);
+                temp_cur = ucn -> getCurso(id_curso);
                 
-                if (temp != nullptr){
-                    temp_al = temp -> get(id);
+                if (temp_cur != nullptr){
+                    temp_al = ucn -> getAlumno(id);
                     if (temp_al != nullptr){
-                        
-                        temp_al -> add(nota, temp -> getNombre());
+                        ucn -> addNota(new Node(nota, id, id_curso));
                     } else {
-                        std::cout << "Error, ID del alumno inexistente." << std::endl;
+                        cout << "Error, ID del Alumno inexistente." << endl;
                         break;
                     }
                 } else {
-                    std::cout << "Error, ID del curso inexistente." << std::endl;
+                    cout << "Error, ID del Curso inexistente." << endl;
                     break;
                 }
                 
-                std::cout<<"Nota Agregada."<< std::endl;
+                cout<<"Nota Agregada."<< endl;
+                temp_cur = nullptr;
+                temp_al = nullptr;
                 break;
             default:
-                std::cout<<"Opción no válida, debe ser un numero del 0 al 6."<< std::endl;
+                cout<<"Opción no válida, debe ser un numero del 0 al 6."<< endl;
                 break;
         }
         
@@ -426,75 +304,82 @@ void menu_alumnos(int int_input, std::string str_input){
     return;
 }
 
-void menu_cursos(int int_input, std::string str_input){
+void menu_cursos(int int_input, string str_input){
     int id = -1;
-    std::string nombre;
+    string nombre;
     int cap = -1;
-    std::string carrera;
-    std::string profesor;
+    string carrera;
+    string profesor;
     
     do {
-        std::cout<<"[Menú Cursos]"<< std::endl;
-        std::cout<<" "<< std::endl;
-        std::cout<<"Opciones:"<< std::endl;
-        std::cout<<"0. Salir."<< std::endl;
-        std::cout<<"1. Crear Curso."<< std::endl;
-        std::cout<<"2. Buscar Curso."<< std::endl;
-        std::cout<<"3. Eliminar Curso."<< std::endl;
+        cout<<"[Menú Cursos]"<< endl;
+        cout<<" "<< endl;
+        cout<<"Opciones:"<< endl;
+        cout<<"0. Salir."<< endl;
+        cout<<"1. Crear Curso."<< endl;
+        cout<<"2. Buscar Curso."<< endl;
+        cout<<"3. Eliminar Curso."<< endl;
         
         int_input = leer_input_int(int_input);
         
         switch(int_input){
             case 0:
-                std::cout<<"[Menú Cursos Finalizado]"<< std::endl;
+                cout<<"[Menú Cursos Finalizado]"<< endl;
+                cout<<" "<< endl;
                 break;
             case 1:
-                std::cout<<"Debe ingresar todos los datos necesarios: "<< std::endl;
-                std::cout<<"[ID]"<< std::endl;
+                cout<<"Debe ingresar todos los datos necesarios: "<< endl;
+                cout<<"[ID ALUMNO]"<< endl;
                 id = leer_input_int(int_input);
-                std::cout<<"[NOMBRE DEL CURSO]"<< std::endl;
+                
+                if(ucn -> getCurso(id) != nullptr){
+                    cout<<"ID ya existente, los identificadores únicos no pueden repetirse."<< endl;
+                    break;
+                }
+                
+                cout<<"[NOMBRE DEL CURSO]"<< endl;
                 nombre = leer_input_str(str_input);
-                std::cout<<"[CAPACIDAD DE ALUMNOS]"<< std::endl;
+                cout<<"[CAPACIDAD DE ALUMNOS]"<< endl;
                 cap = leer_input_int(int_input);
-                std::cout<<"[CARRERA]"<< std::endl;
+                cout<<"[CARRERA]"<< endl;
                 carrera = leer_input_str(str_input);
-                std::cout<<"[PROFESOR]"<< std::endl;
+                cout<<"[PROFESOR]"<< endl;
                 profesor = leer_input_str(str_input);
                 
-                ucn -> add_curso(new Curso(id,nombre,cap,carrera,profesor));
-                std::cout<<"Curso Creado."<< std::endl;
+                ucn -> addCurso(new Curso(id,nombre,cap,carrera,profesor));
+                cout<<"Curso Creado."<< endl;
                 break;
             case 2:
-                if(ucn -> cursos_start -> getNext() == nullptr){
-                    std::cout<<"No hay cursos."<< std::endl;
+                if(ucn -> cursos_start == nullptr){
+                    cout<<"No hay cursos."<< endl;
                     break;
                 }
                 
                 do {
-                std::cout<<"Buscar Curso por:"<< std::endl;
-                std::cout<<"0. Cancelar."<< std::endl;
-                std::cout<<"1. ID."<< std::endl;
-                std::cout<<"2. Nombre."<< std::endl;
+                cout<<"Buscar Curso por:"<< endl;
+                cout<<"0. Cancelar."<< endl;
+                cout<<"1. ID."<< endl;
+                cout<<"2. Nombre."<< endl;
                 
                 int_input = leer_input_int(int_input);
                 
                 //...
                 switch(int_input){
                     case 0:
-                        std::cout<<"[Cancelado]"<< std::endl;
+                        cout<<"[Cancelado]"<< endl;
                         break;
                     case 1:
-                        std::cout<<"[ID]"<< std::endl;
+                        cout<<"[ID ALUMNO]"<< endl;
                         id = leer_input_int(int_input);
-                        ucn -> get_curso(id) -> print();
+                        ucn -> getCurso(id) -> print();
                         break;
                     case 2:
-                        std::cout<<"[NOMBRE]"<< std::endl;
+                        cout<<"[NOMBRE]"<< endl;
                         nombre = leer_input_str(str_input);
                         ucn -> print_curso(nombre);
                         break;
                     default:
-                        std::cout<<"Opción no válida, debe ser un numero del 0 al 2."<< std::endl;
+                        cout<<"Opción no válida, debe ser un numero del 0 al 2."<< endl;
                         break;
                 } //...
                 
@@ -502,129 +387,181 @@ void menu_cursos(int int_input, std::string str_input){
                 int_input = 2;
                 break;
             case 3:
-                if(ucn -> cursos_start -> getNext() == nullptr){
-                    std::cout<<"No hay cursos."<< std::endl;
+                if(ucn -> cursos_start == nullptr){
+                    cout<<"No hay cursos."<< endl;
                     break;
                 }
-                std::cout<<"[ID]"<< std::endl;
+                cout<<"[ID ALUMNO]"<< endl;
                 id = leer_input_int(int_input);
                 
-                ucn -> remove(id);
+                if(ucn -> getCurso(id) == nullptr){
+                    cout<<"Error, ID del Curso inexistente."<< endl;
+                    break;
+                }
+                
+                ucn -> removerCurso(id);
+                cout<<"Curso eliminado."<< endl;
                 break;
             default:
-                std::cout<<"Opción no válida, debe ser un numero del 0 al 3."<< std::endl;
+                cout<<"Opción no válida, debe ser un numero del 0 al 3."<< endl;
                 break;
         }
     } while (int_input != 0);
     return;
 }
 
-void menu_reportes(int int_input, std::string str_input){
+void menu_reportes(int int_input, string str_input){
     int id = -1;
     int id_curso = -1;
     double promedio = 0.0;
     double promedio_g = 0.0;
-    std::string carrera;
+    string carrera;
     Curso *temp = nullptr;
     
     do {
-        std::cout<<"[Menú de Consultas y Reportes]"<< std::endl;
-        std::cout<<" "<< std::endl;
-        std::cout<<"Opciones:"<< std::endl;
-        std::cout<<"0. Salir."<< std::endl;
-        std::cout<<"1. Listar Alumnos en Carrera."<< std::endl;
-        std::cout<<"2. Cursos en los que un Alumno está inscrito."<< std::endl;
-        std::cout<<"3. Promedio de Notas de un Alumno en un Curso."<< std::endl;
-        std::cout<<"4. Promedio de Notas General de un Alumno."<< std::endl;
+        cout<<"[Menú de Consultas y Reportes]"<< endl;
+        cout<<" "<< endl;
+        cout<<"Opciones:"<< endl;
+        cout<<"0. Salir."<< endl;
+        cout<<"1. Listar Alumnos en Carrera."<< endl;
+        cout<<"2. Cursos en los que un Alumno está inscrito."<< endl;
+        cout<<"3. Promedio de Notas de un Alumno en un Curso."<< endl;
+        cout<<"4. Promedio de Notas General de un Alumno."<< endl;
         
         int_input = leer_input_int(int_input);
         
         switch(int_input){
             case 0:
-                std::cout<<"[Menú de Consultas y Reportes Finalizado]"<< std::endl;
+                cout<<"[Menú de Consultas y Reportes Finalizado]"<< endl;
+                cout<<" "<< endl;
                 break;
             case 1:
-                std::cout<<"[CARRERA]"<< std::endl;
+                if(ucn -> alumnos_start == nullptr) {
+                    cout<<"No hay alumnos."<< endl;
+                    break;
+                }
+                cout<<"[CARRERA]"<< endl;
                 carrera = leer_input_str(str_input);
                 
-                ucn -> alumnos_en(carrera);
+                ucn -> print_alumnos(carrera);
                 break;
             case 2:
-                if(ucn -> cursos_start -> getNext() == nullptr){
-                    std::cout<<"No hay cursos."<< std::endl;
+                if(ucn -> cursos_start == nullptr){
+                    cout<<"No hay Cursos."<< endl;
                     break;
                 }
-                std::cout<<"[ID]"<< std::endl;
+                if(ucn -> alumnos_start == nullptr) {
+                    cout<<"No hay Alumnos."<< endl;
+                    break;
+                }
+                
+                cout<<"[ID ALUMNO]"<< endl;
                 id = leer_input_int(int_input);
-                ucn -> cursos_alumno(id);
+                
+                if(ucn -> getAlumno(id) == nullptr){
+                    cout<<"Error, ID del alumno inexistente."<< endl;
+                    break;
+                }
+                
+                ucn -> print_cursos(id);
                 break;
             case 3:
-                if(ucn -> cursos_start -> getNext() == nullptr){
-                    std::cout<<"No hay cursos."<< std::endl;
+                if(ucn -> cursos_start == nullptr){
+                    cout<<"No hay Cursos."<< endl;
                     break;
                 }
-                std::cout<<"[ID]"<< std::endl;
+                if(ucn -> alumnos_start == nullptr) {
+                    cout<<"No hay Alumnos."<< endl;
+                    break;
+                }
+                if (ucn -> notas_start == nullptr){
+                    cout<<"No hay inscripciones ni Notas."<< endl;
+                    break;
+                }
+                
+                cout<<"[ID ALUMNO]"<< endl;
                 id = leer_input_int(int_input);
-                std::cout<<"[ID CURSO]"<< std::endl;
+                
+                if(ucn -> getAlumno(id) == nullptr){
+                    cout<<"Error, ID del Alumno inexistente."<< endl;
+                    break;
+                }
+                
+                cout<<"[ID CURSO]"<< endl;
                 id_curso = leer_input_int(int_input);
                 
-                temp = ucn -> get_curso(id_curso);
+                temp = ucn -> getCurso(id_curso);
                 if(temp == nullptr){
-                    std::cout<<"Curso inválido."<< std::endl;
+                    cout<<"Error, ID del Curso inexistente."<< endl;
                     break;
                 }
-                promedio = temp -> promedio(id);
-                if(promedio != -1.0){
-                    std::cout<<"Promedio de Notas del Alumno en el Curso " + temp -> getNombre() + ": ";
-                    std::cout<<promedio<< std::endl;
+                promedio = ucn -> promedio(id,id_curso);
+                if(promedio != 0.0){
+                    cout<<"Promedio de Notas del Alumno en el Curso " + temp -> getNombre() + ": ";
+                    cout<<promedio<< endl;
+                } else {
+                    cout<<"Error, no hay notas para el Alumno en el Curso " + temp -> getNombre() + "."<< endl;
                 }
+                temp = nullptr;
                 break;
             case 4:
-                if(ucn -> cursos_start -> getNext() == nullptr){
-                    std::cout<<"No hay cursos."<< std::endl;
+                if(ucn -> cursos_start == nullptr){
+                    cout<<"No hay cursos."<< endl;
                     break;
                 }
-                if (ucn -> cursos_start -> isEmpty()){
-                    std::cout<<"No hay alumnos."<< std::endl;
+                if(ucn -> alumnos_start == nullptr) {
+                    cout<<"No hay alumnos."<< endl;
                     break;
                 }
-                std::cout<<"[ID]"<< std::endl;
+                if (ucn -> notas_start == nullptr){
+                    cout<<"No hay inscripciones ni notas."<< endl;
+                    break;
+                }
+                
+                cout<<"[ID ALUMNO]"<< endl;
                 id = leer_input_int(int_input);
                 
-                promedio_g = ucn -> promedio_general(id);
-                if(promedio != -1.0){
-                    std::cout<<"Promedio General de Notas del Alumno: ";
-                    std::cout<<promedio_g<< std::endl;
+                if(ucn -> getAlumno(id) == nullptr){
+                    cout<<"Error, ID del Alumno inexistente."<< endl;
+                    break;
+                }
+                
+                promedio_g = ucn -> promedio_General(id);
+                if(promedio_g != 0.0){
+                    cout<<"Promedio General de Notas del Alumno: ";
+                    cout<<promedio_g<< endl;
+                } else {
+                    cout<<"Error, alumno no tiene notas."<< endl;
                 }
                 break;
             default:
-                std::cout<<"Opción no válida, debe ser un numero del 0 al 4."<< std::endl;
+                cout<<"Opción no válida, debe ser un numero del 0 al 4."<< endl;
                 break;
         }
         
     } while (int_input != 0);
-    
-    std::cout<<"[Menú reportes Finalizado]"<< std::endl;
     return;
 }
 
 void menu(){
-    std::string str_input;
+    cout<<"Datos por defecto: ID's 1 y 2 tanto para Alumnos como para Cursos."<< endl;
+    cout<<" "<< endl;
+    string str_input;
     int int_input = -1;
     do {
-        std::cout<<"[MENÚ PRINCIPAL]"<< std::endl;
-        std::cout<<" "<< std::endl;
-        std::cout<<"Opciones:"<< std::endl;
-        std::cout<<"0. Salir."<< std::endl;
-        std::cout<<"1. Manejo de Alumnos."<< std::endl;
-        std::cout<<"2. Manejo de Cursos."<< std::endl;
-        std::cout<<"3. Consultas y Reportes."<< std::endl;
+        cout<<"[MENÚ PRINCIPAL]"<< endl;
+        cout<<" "<< endl;
+        cout<<"Opciones:"<< endl;
+        cout<<"0. Salir."<< endl;
+        cout<<"1. Manejo de Alumnos."<< endl;
+        cout<<"2. Manejo de Cursos."<< endl;
+        cout<<"3. Consultas y Reportes."<< endl;
         
         int_input = leer_input_int(int_input);
         
         switch(int_input){
             case 0:
-                std::cout<<"[MENÚ FINALIZADO]"<< std::endl;
+                cout<<"[MENÚ FINALIZADO]"<< endl;
                 break;
             case 1:
                 menu_alumnos(int_input, str_input);
@@ -636,7 +573,7 @@ void menu(){
                 menu_reportes(int_input, str_input);
                 break;
             default:
-                std::cout<<"Opción no válida, debe ser un numero del 0 al 3."<< std::endl;
+                cout<<"Opción no válida, debe ser un numero del 0 al 3."<< endl;
                 break;
         }
     } while (int_input != 0);
@@ -644,16 +581,21 @@ void menu(){
 }
 
 int main(){
-    ucn -> cursos_start = new Curso(-1, "Curso_0", 1024, "null", "null");
-    ucn -> cursos_start -> setNext(new Curso(1, "Programacion", 3, "iti","ed"));
-    ucn -> cursos_start -> getNext() -> setNext(new Curso(2, "Electrotecnia", 3, "iti","fd"));
-    Alumno *first = new Alumno(1, "Juan", "Beckios", "iti","2024");
-    ucn -> cursos_start -> add(first);
-    ucn -> cursos_start -> getNext() -> add(first);
-    ucn -> cursos_start -> getNext() -> getNext() -> add(first);
-    first -> add(2.0, "Programacion");
-    first -> add(6.0, "Programacion");
-    first -> add(6.0, "Electrotecnia");
+    //Datos por defecto.
+    ucn -> cursos_start = new Curso(1, "Programación", 3, "iti","E.d");
+    ucn -> cursos_start -> setNext(new Curso(2, "Electrotecnia", 3, "iti","F.d"));
+    ucn -> addAlumno(new Alumno(1, "Juan", "Beckios", "iti","2024"));
+    ucn -> addAlumno(new Alumno(2, "Helen", "Flores", "iti","2025"));
+    
+    ucn -> addNota(new Node(0.0, 1, 1));
+    ucn -> addNota(new Node(0.0, 1, 2));
+    ucn -> addNota(new Node(0.0, 2, 1));
+    
+    ucn -> addNota(new Node(2.0, 1, 1));
+    ucn -> addNota(new Node(6.0, 1, 1));
+    ucn -> addNota(new Node(6.0, 1, 2));
+    ucn -> addNota(new Node(4.5, 2, 1));
+    ucn -> addNota(new Node(7, 2, 1));
     menu();
     return 0;
 }
