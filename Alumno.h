@@ -1,36 +1,34 @@
 #include "Node.h"
+#include <iostream>
 #pragma once
+using namespace std;
 
 class Alumno {
     private:
         int id;
-    	std::string nombre;
-    	std::string apellido;
-    	std::string carrera;
-    	std::string fechaIngreso;
-    	Node *notas_start;
+    	string nombre;
+    	string apellido;
+    	string carrera;
+    	string fechaIngreso;
         Alumno *next;
     public:
-        Alumno(int id, std::string nombre, std::string apellido,
-        std::string carrera, std::string fechaIngreso);
+        Alumno(int id, string nombre, string apellido,
+        string carrera, string fechaIngreso);
 	
         void setId(int id);
-    	void setNombre(std::string nombre);
-    	void setApellido(std::string apellido);
-    	void setCarrera(std::string carrera);
-    	void setFecha(std::string fechaIngreso);
+    	void setNombre(string nombre);
+    	void setApellido(string apellido);
+    	void setCarrera(string carrera);
+    	void setFecha(string fechaIngreso);
     	void setNext(Alumno *next);
     	
-    	void add(double nota, std::string curso);
-    	void remove(std::string curso);
         void print();
 	
         int getId();
-    	std::string getNombre();
-    	std::string getApellido();
-    	std::string getCarrera();
-    	std::string getFecha();
-    	Node *getNotas();
+    	string getNombre();
+    	string getApellido();
+    	string getCarrera();
+    	string getFecha();
         Alumno *getNext();
 	
         ~Alumno();
